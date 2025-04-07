@@ -12,9 +12,9 @@ HashTable::HashTable(){
 HashTable::HashTable(int s, int mult){
 }
 
-int HashTable::getSize(){ return -1; }
-int HashTable::getNumElements(){ return -1; }
-int HashTable::getP(){ return -1; }
+int HashTable::getSize(){ return size; }
+int HashTable::getNumElements(){ return numElements; }
+int HashTable::getP(){ return p; }
 
 void HashTable::printTable(){
   std::cout << "HASH TABLE CONTENTS" << std::endl;
