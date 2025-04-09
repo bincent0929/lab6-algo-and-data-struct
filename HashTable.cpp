@@ -36,10 +36,24 @@ void HashTable::printTable(){
 }
 
 int HashTable::search(std::string s){
+  int hashedIndex = hash(s);
+  for (int i = 0; i < table[hashedIndex].size(); i++) {
+    if (table[hashedIndex][i] == s) {
+      return i;
+    }
+    else break;
+  }
   return -1;
 }
 
 void HashTable::insert(std::string s){
+  int hashedIndex = hash(s);
+  table[hashedIndex].push_back(s);
+  /**
+   * Apparently this adds the value in a chain at the index that was
+   * hashed. So THERE ARE COLLISIONS.
+   */
+  numElements++;
 }
 
 void HashTable::remove(std::string s){
@@ -53,6 +67,8 @@ void HashTable::resize(int s){
  * please use a unsigned int variable to hold the cumulative sum
  * of the individual hash results of the chars in the string, and 
  * return the sum modulus the size of the table in the end as an int.
+ * The above is required because of using the ASCII values and them
+ * returning bit values
  */
 int HashTable::hash(std::string s){
   uint32_t cumSum;
