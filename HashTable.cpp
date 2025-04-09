@@ -7,9 +7,15 @@
 #include "HashTable.h"
 
 HashTable::HashTable(){
+  size = 11;
+  p = 11;
+  // one of the constants for polynomial rolling hash should be 31
 }
 
 HashTable::HashTable(int s, int mult){
+  size = s;
+  p = mult;
+  // one of the constants for polynomial rolling hash should be 31
 }
 
 int HashTable::getSize(){ return size; }
