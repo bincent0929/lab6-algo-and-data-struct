@@ -39,7 +39,7 @@ int HashTable::search(std::string s){
   int hashedIndex = hash(s);
   for (int i = 0; i < table[hashedIndex].size(); i++) {
     if (table[hashedIndex][i] == s) {
-      return i;
+      return hashedIndex;
     }
     else break;
   }
@@ -57,6 +57,18 @@ void HashTable::insert(std::string s){
 }
 
 void HashTable::remove(std::string s){
+  int hashedIndex = search(s);
+  if (hashedIndex == -1) {
+    return;
+    // not found in the table
+  }
+  for (int i = 0; i < table[hashedIndex].size(); i++) {
+    if (table[hashedIndex][i] == s) {
+      table[hashedIndex].erase(table[hashedIndex].begin() + i);
+      // supposedly this removes the first occurence of the string
+    }
+  }
+  numElements--;
 }
 
 void HashTable::resize(int s){
