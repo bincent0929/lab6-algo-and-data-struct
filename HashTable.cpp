@@ -91,7 +91,7 @@ int HashTable::hash(std::string s){
 
   // might need to check for overflow error
   // due to unsigned -> signed conversion
-  finalSum = cumSum % s.length();
+  finalSum = cumSum % table.size();
 
   return finalSum;
 }
