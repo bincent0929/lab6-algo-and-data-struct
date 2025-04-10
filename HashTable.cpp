@@ -6,6 +6,8 @@
 #include <math.h>
 #include "HashTable.h"
 
+using namespace std;
+
 HashTable::HashTable(){
   size = 11;
   p = 31;
@@ -52,7 +54,6 @@ int HashTable::search(std::string s){
 
 void HashTable::insert(std::string s){
   int hashedIndex = hash(s);
-  //std::cout << hashedIndex << std::endl;
   table[hashedIndex].push_back(s);
   //std::cout << table[hashedIndex][0] << std::endl;
   /**
@@ -78,6 +79,11 @@ void HashTable::resize(int s){
   auto oldSizedTable = move(table); // saves the table's values to a new vector
   table.resize(s); // clears and resizes the vector
   size = s; // updates the size in the object
+
+  if (numElements == 0) {
+    return;
+  }
+
   numElements = 0;
   // ^ important to update before because hashing uses
   // the size variable to calculate index
@@ -101,14 +107,17 @@ int HashTable::hash(std::string s){
   int index;
 
   for (int i = 0; i < s.length(); i++) {
-    
+    /*
     int exponentiatedV = 1;
     for (int j = 0; j < i; j++) {
       exponentiatedV *= p;
     }
 
     cumSum += static_cast<int>(s[i]) * exponentiatedV;
+    */
+    cumSum += static_cast<int>(s[i]) * pow(p, i);
   }
+
   //std::cout << "cumulative sum calculated" << std::endl;
   //std::cout << cumSum << std::endl;
 
