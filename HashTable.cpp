@@ -8,13 +8,17 @@
 
 HashTable::HashTable(){
   size = 11;
-  p = 11;
+  p = 31;
+  numElements = 0;
+  table.resize(size);
   // one of the constants for polynomial rolling hash should be 31
 }
 
 HashTable::HashTable(int s, int mult){
   size = s;
   p = mult;
+  numElements = 0;
+  table.resize(size);
   // one of the constants for polynomial rolling hash should be 31
 }
 
@@ -40,15 +44,17 @@ int HashTable::search(std::string s){
   for (int i = 0; i < table[hashedIndex].size(); i++) {
     if (table[hashedIndex][i] == s) {
       return hashedIndex;
+      //std::cout << s << std::endl;
     }
-    else break;
   }
   return -1;
 }
 
 void HashTable::insert(std::string s){
   int hashedIndex = hash(s);
+  //std::cout << hashedIndex << std::endl;
   table[hashedIndex].push_back(s);
+  //std::cout << table[hashedIndex][0] << std::endl;
   /**
    * Apparently this adds the value in a chain at the index that was
    * hashed. So THERE ARE COLLISIONS.
@@ -57,24 +63,22 @@ void HashTable::insert(std::string s){
 }
 
 void HashTable::remove(std::string s){
-  int hashedIndex = search(s);
-  if (hashedIndex == -1) {
-    return;
-    // not found in the table
-  }
+  int hashedIndex = hash(s);
   for (int i = 0; i < table[hashedIndex].size(); i++) {
     if (table[hashedIndex][i] == s) {
       table[hashedIndex].erase(table[hashedIndex].begin() + i);
+      numElements--;
+      return;
       // supposedly this removes the first occurence of the string
     }
   }
-  numElements--;
 }
 
 void HashTable::resize(int s){
   auto oldSizedTable = move(table); // saves the table's values to a new vector
   table.resize(s); // clears and resizes the vector
   size = s; // updates the size in the object
+  numElements = 0;
   // ^ important to update before because hashing uses
   // the size variable to calculate index
   for (int i = 0; i < oldSizedTable.size(); i++) {
@@ -94,14 +98,25 @@ void HashTable::resize(int s){
  */
 int HashTable::hash(std::string s){
   unsigned int cumSum = 0;
-  int index = 0;
+  int index;
+
   for (int i = 0; i < s.length(); i++) {
-    cumSum += static_cast<int>(s[i]) * pow(p, i);
+    
+    int exponentiatedV = 1;
+    for (int j = 0; j < i; j++) {
+      exponentiatedV *= p;
+    }
+
+    cumSum += static_cast<int>(s[i]) * exponentiatedV;
   }
+  //std::cout << "cumulative sum calculated" << std::endl;
+  //std::cout << cumSum << std::endl;
 
   // might need to check for overflow error
   // due to unsigned -> signed conversion
-  index = static_cast<int>(cumSum % static_cast<size_t>(size));
+  index = cumSum % size;
+  //std::cout << "index calculated" << std::endl;
+  //std::cout << index << std::endl;
 
   return index;
 }
