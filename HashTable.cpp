@@ -72,6 +72,16 @@ void HashTable::remove(std::string s){
 }
 
 void HashTable::resize(int s){
+  auto oldSizedTable = move(table); // saves the table's values to a new vector
+  table.resize(s); // clears and resizes the vector
+  size = s; // updates the size in the object
+  // ^ important to update before because hashing uses
+  // the size variable to calculate index
+  for (int i = 0; i < oldSizedTable.size(); i++) {
+    for (int j = 0; j < oldSizedTable[i].size(); j++) {
+      insert(oldSizedTable[i][j]);
+    }
+  }
 }
 
 /**
@@ -83,15 +93,15 @@ void HashTable::resize(int s){
  * returning bit values
  */
 int HashTable::hash(std::string s){
-  uint32_t cumSum;
-  int finalSum;
+  unsigned int cumSum = 0;
+  int index = 0;
   for (int i = 0; i < s.length(); i++) {
     cumSum += static_cast<int>(s[i]) * pow(p, i);
   }
 
   // might need to check for overflow error
   // due to unsigned -> signed conversion
-  finalSum = cumSum % table.size();
+  index = static_cast<int>(cumSum % static_cast<size_t>(size));
 
-  return finalSum;
+  return index;
 }
